@@ -2,13 +2,11 @@ package com.example.diveintocleanarchitecture.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.diveintocleanarchitecture.data.repository.UserRepositoryImpl
-import com.example.diveintocleanarchitecture.data.storage.UserStorage
-import com.example.diveintocleanarchitecture.data.storage.shared_pref.SharedPrefsUserStorage
+import com.example.data.data.repository.UserRepositoryImpl
+import com.example.data.data.storage.shared_pref.SharedPrefsUserStorage
 import com.example.diveintocleanarchitecture.databinding.ActivityMainBinding
-import com.example.diveintocleanarchitecture.domain.models.SaveUserNameParam
-import com.example.diveintocleanarchitecture.domain.usecase.GetUserNameUseCase
-import com.example.diveintocleanarchitecture.domain.usecase.SaveUserNameUseCase
+import com.example.domain.domain.usecase.GetUserNameUseCase
+import com.example.domain.domain.usecase.SaveUserNameUseCase
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,8 +18,16 @@ class MainActivity : AppCompatActivity() {
             )
         )
     }
-    private val getUserNameUseCase by lazy { GetUserNameUseCase(userRepositoryImpl) }
-    private val saveUserNameUseCase by lazy { SaveUserNameUseCase(userRepositoryImpl) }
+    private val getUserNameUseCase by lazy {
+        GetUserNameUseCase(
+            userRepositoryImpl
+        )
+    }
+    private val saveUserNameUseCase by lazy {
+        SaveUserNameUseCase(
+            userRepositoryImpl
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.sendButton.setOnClickListener {
             val text = binding.dataEditText.text.toString()
-            val param = SaveUserNameParam(text)
+            val param = com.example.domain.domain.models.SaveUserNameParam(text)
             val result = saveUserNameUseCase.execute(param)
             binding.dataTextView.text = "Result $result"
         }

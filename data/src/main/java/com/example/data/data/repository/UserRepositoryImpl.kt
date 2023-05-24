@@ -1,10 +1,10 @@
-package com.example.diveintocleanarchitecture.data.repository
+package com.example.data.data.repository
 
-import com.example.diveintocleanarchitecture.data.storage.UserStorage
-import com.example.diveintocleanarchitecture.data.storage.model.User
-import com.example.diveintocleanarchitecture.domain.models.SaveUserNameParam
-import com.example.diveintocleanarchitecture.domain.models.UserName
-import com.example.diveintocleanarchitecture.domain.repository.UserRepository
+import com.example.data.data.storage.UserStorage
+import com.example.data.data.storage.model.User
+import com.example.domain.domain.models.SaveUserNameParam
+import com.example.domain.domain.models.UserName
+import com.example.domain.domain.repository.UserRepository
 
 class UserRepositoryImpl(private val userStorage: UserStorage) : UserRepository {
     override fun saveName(saveParam: SaveUserNameParam): Boolean {
