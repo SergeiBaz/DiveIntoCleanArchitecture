@@ -1,31 +1,26 @@
 package com.example.diveintocleanarchitecture.data.repository
 
-import android.content.Context
+import com.example.diveintocleanarchitecture.data.storage.UserStorage
+import com.example.diveintocleanarchitecture.data.storage.model.User
 import com.example.diveintocleanarchitecture.domain.models.SaveUserNameParam
 import com.example.diveintocleanarchitecture.domain.models.UserName
 import com.example.diveintocleanarchitecture.domain.repository.UserRepository
 
-private const val SHARED_PREFS_NAME = "shared_prefs_name"
-private const val KEY_FIRST_NAME = "firstName"
-private const val KEY_LAST_NAME = "lastName"
-private const val DEFAULT_FIRST_NAME = "Ivan"
-private const val DEFAULT_LAST_NAME = "Ivanov"
-
-class UserRepositoryImpl(context: Context) : UserRepository {
-
-    private val sharedPreferences =
-        context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
-
+class UserRepositoryImpl(private val userStorage: UserStorage) : UserRepository {
     override fun saveName(saveParam: SaveUserNameParam): Boolean {
-        sharedPreferences.edit().putString(KEY_FIRST_NAME, saveParam.name).apply()
-        return saveParam.name.isNotEmpty()
+        return userStorage.saveUser(mapToStorage(saveParam))
     }
 
     override fun getName(): UserName {
-        val firstName =
-            sharedPreferences.getString(KEY_FIRST_NAME, DEFAULT_FIRST_NAME) ?: DEFAULT_FIRST_NAME
-        val lastName =
-            sharedPreferences.getString(KEY_LAST_NAME, DEFAULT_LAST_NAME) ?: DEFAULT_LAST_NAME
-        return UserName(firstName = firstName, lastName = lastName)
+        val user = userStorage.getUser()
+        return mapToDomain(user)
     }
+}
+
+private fun mapToDomain(user: User): UserName {
+    return UserName(user.firstName, user.lastName)
+}
+
+private fun mapToStorage(user: SaveUserNameParam): User {
+    return User(user.name, "")
 }

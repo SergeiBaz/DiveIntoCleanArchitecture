@@ -3,6 +3,8 @@ package com.example.diveintocleanarchitecture.presentation
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.diveintocleanarchitecture.data.repository.UserRepositoryImpl
+import com.example.diveintocleanarchitecture.data.storage.UserStorage
+import com.example.diveintocleanarchitecture.data.storage.shared_pref.SharedPrefsUserStorage
 import com.example.diveintocleanarchitecture.databinding.ActivityMainBinding
 import com.example.diveintocleanarchitecture.domain.models.SaveUserNameParam
 import com.example.diveintocleanarchitecture.domain.usecase.GetUserNameUseCase
@@ -11,7 +13,13 @@ import com.example.diveintocleanarchitecture.domain.usecase.SaveUserNameUseCase
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val userRepositoryImpl by lazy { UserRepositoryImpl(context = applicationContext) }
+    private val userRepositoryImpl by lazy {
+        UserRepositoryImpl(
+            userStorage = SharedPrefsUserStorage(
+                applicationContext
+            )
+        )
+    }
     private val getUserNameUseCase by lazy { GetUserNameUseCase(userRepositoryImpl) }
     private val saveUserNameUseCase by lazy { SaveUserNameUseCase(userRepositoryImpl) }
 
