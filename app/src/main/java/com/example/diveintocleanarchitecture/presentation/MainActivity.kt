@@ -2,48 +2,31 @@ package com.example.diveintocleanarchitecture.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.data.data.repository.UserRepositoryImpl
-import com.example.data.data.storage.shared_pref.SharedPrefsUserStorage
+import androidx.lifecycle.ViewModelProvider
 import com.example.diveintocleanarchitecture.databinding.ActivityMainBinding
-import com.example.domain.domain.usecase.GetUserNameUseCase
-import com.example.domain.domain.usecase.SaveUserNameUseCase
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val userRepositoryImpl by lazy {
-        UserRepositoryImpl(
-            userStorage = SharedPrefsUserStorage(
-                applicationContext
-            )
-        )
-    }
-    private val getUserNameUseCase by lazy {
-        GetUserNameUseCase(
-            userRepositoryImpl
-        )
-    }
-    private val saveUserNameUseCase by lazy {
-        SaveUserNameUseCase(
-            userRepositoryImpl
-        )
-    }
+    private lateinit var vm: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        vm = ViewModelProvider(this, MainViewModelFactory(this))[MainViewModel::class.java]
+        vm.liveData.observe(this) { text ->
+            binding.dataTextView.text = text
+        }
+
         binding.sendButton.setOnClickListener {
             val text = binding.dataEditText.text.toString()
-            val param = com.example.domain.domain.models.SaveUserNameParam(text)
-            val result = saveUserNameUseCase.execute(param)
-            binding.dataTextView.text = "Result $result"
+            vm.save(text)
         }
 
         binding.receiveButton.setOnClickListener {
-            val userName = getUserNameUseCase.execute()
-            binding.dataTextView.text = "${userName.firstName} ${userName.lastName}"
+            vm.load()
         }
     }
 }

@@ -27,7 +27,7 @@ class SharedPrefsUserStorage(context: Context) : UserStorage {
             sharedPrefsUserStorage.getString(KEY_FIRST_NAME, DEFAULT_FIRST_NAME)
                 ?: DEFAULT_FIRST_NAME
         val lastName =
-            sharedPrefsUserStorage.getString(KEY_FIRST_NAME, DEFAULT_LAST_NAME) ?: DEFAULT_LAST_NAME
+            sharedPrefsUserStorage.getString(KEY_LAST_NAME, DEFAULT_LAST_NAME) ?: DEFAULT_LAST_NAME
         return User(firstName, lastName)
     }
 }
